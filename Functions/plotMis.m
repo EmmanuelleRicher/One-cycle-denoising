@@ -1,4 +1,23 @@
-function [all_mis, all_phase_ids] = plotMis(mis, phasesI, nBinPhases, output_dir, titre)
+% This function plots the Mattes Mutual Information metric for every frame 
+% of the video
+% 
+% Input arguments :
+%   mis : array of Mattes Mutual Information metric to plot
+%   phasesI : cell array containing the id of the frames and their
+%             corresponding bins. For example, phasesI{1} is a vector
+%             containing the ids of all raw OCT scans corresponding to 
+%             bin 1.
+%   nBinPhases : integer containing the number of bins used in the 
+%                separation of the cardiac cycle. 
+%   output_dir : folder in which to save 
+%   titles : str containing title to put on figure
+% 
+% Return :
+%   all_mis : list of Mattes Mutual Information metric computed for all
+%             images
+%   all_phase_ids : list of all bin ids of all images
+function [all_mis, all_phase_ids] = plotMis(mis, phasesI, nBinPhases, ...
+                                            output_dir, titles)
 
 all_mis = [];
 all_phase_ids = [];
@@ -25,7 +44,7 @@ end
 legend(leg);
 axis([0 max(phasesIds, [], 'all') 0 1.15*max(all_mis, [], 'all')])
 title(sprintf('mean :%.4f, std : %.4f', mean(all_mis), std(all_mis)))
-savefig(fullfile(output_dir, [titre '.fig']))
-exportgraphics(gcf, fullfile(output_dir, [titre '.png']))
+savefig(fullfile(output_dir, [titles '.fig']))
+exportgraphics(gcf, fullfile(output_dir, [titles '.png']))
 
 end

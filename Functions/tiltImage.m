@@ -1,3 +1,12 @@
+% This function applies the tilts found by maximum correlation on a image 
+% to be registered. 
+% 
+% Input arguments :
+%   moving : image to be registered
+%   shifts : computed tilts to apply to every a scan
+% 
+% Return :
+%   newMoving : registered image
 function newMoving = tiltImage(moving, shifts)
 
 % if images were converted to double (averaged images), we need to convert

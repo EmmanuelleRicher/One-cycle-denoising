@@ -1,5 +1,29 @@
-% rewrite function initially from the class AveragePulse into stand alone function
-function [phase, binPhase] = getPhasesFromTimestamps(pulse, timePulseSec, timePulseMilliSec, numCycles, nBinPhases, t, ctn)
+% This function computes the specific phase of a current OCT frame by
+% extraction the pulse peaks, separating one cardiac cycle into a fixed
+% number of bins and finding the bin closest to the current OCT timestamp. 
+%
+% Input arguments :
+%   pulse : array containing the pulse amplitude information
+%   timeSec : array containing the timestamps of the pulse signal in
+%             seconds (must be same size as pulse variable)
+%   timeMilliSec : array containing the timestamps of the pulse signal in
+%                  milli seconds (must be same size as pulse variable)
+% 
+%   numCycles : integer containing the number of cycles for the averaged
+%               video (typically 1)
+%   nBinPhases : integer containing the number of bins used in the 
+%                separation of the cardiac cycle. 
+%   t : current OCT timestamp
+%   ctn : counter of number of frames for visualization purposes
+% 
+% Return : 
+%   phase : phase of current OCT frame
+%   binPhase : bin of phase of current OCT frame
+function [phase, binPhase] = getPhasesFromTimestamps(pulse, ...
+                                                     timePulseSec, ...
+                                                     timePulseMilliSec, ...
+                                                     numCycles, ...
+                                                     nBinPhases, t, ctn)
 
 % extract peaks from timestampsPulse signal
 % minimum distance for a peak in milliseconds

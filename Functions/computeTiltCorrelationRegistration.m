@@ -1,4 +1,36 @@
-function mis = computeTiltCorrelationRegistration(output_dir, transFolder, regFolder, list_raw_scans, phasesI, nBinPhases, kernelSize)
+% This function will register all images to their bin reference frame
+% (first frame of every bin) using translation and tilt correlation
+% approaches. The output of the tilt correlation is saved in a .txt file. 
+%
+% Input arguments:
+%   output_dir : folder in which to save the tilt information .txt file
+%   transFolder : folder that contains / will contain the OCT frames after
+%                 translation
+%   regFolder : folder that contains / will contain the OCT frames after
+%               tilt registration
+%   list_raw_scans : structure containing the filenames of the raw OCT 
+%                    scans to register. This structure needs to be 
+%                    organized as with the dir function of matlab, with a 
+%                    .folder attribute and .name attribute mandatory
+%   phasesI : cell array containing the id of the frames and their
+%             corresponding bins. For example, phasesI{1} is a vector
+%             containing the ids of all raw OCT scans corresponding to 
+%             bin 1. This will be the output of the getPhase.m function. 
+%   nBinPhases : integer containing the number of bins used in the 
+%                separation of the cardiac cycle. 
+%   kernelSize : kernel size (in pixels) for smoothing the images to help 
+%                the translation registration operation. 
+%
+% Return : 
+%   mis : Mattes Mutual Information metric assession the image quality and
+%         the registration quality after registration of all frames of the 
+%         video in a cell array. 
+function mis = computeTiltCorrelationRegistration(output_dir, ...
+                                                  transFolder, ...
+                                                  regFolder, ...
+                                                  list_raw_scans, ...
+                                                  phasesI, ...
+                                                  nBinPhases, kernelSize)
 
 % create tilt info file
 % open file and discard contents

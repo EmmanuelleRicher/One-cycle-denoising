@@ -1,4 +1,16 @@
-function [newMoving_tilt, p, angle] = tiltImageByCorrelation(movingTrans, fixed)
+% This function computes the tilts in order to register an image to a fixed
+% reference frame. 
+% 
+% Input arguments :
+%   movingTrans : image after translation, to be registered by tilts
+%   fixed : fixed image used as a reference frame
+% 
+% Return :
+%   newMoving_tilt : registered image
+%   p : coordinates of the fitted line
+%   angle : corresponding angle of the tilt applied to the image
+function [newMoving_tilt, p, angle] = tiltImageByCorrelation(movingTrans, ...
+                                                             fixed)
 
 nS = 20;
 largeur = size(fixed, 2);

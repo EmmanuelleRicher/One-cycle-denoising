@@ -1,4 +1,24 @@
-function registerAverageBinTiltTranslation(regFolder, regAveFolder, phasesI_corr, fileNames, nBinPhases, kernelSize)
+% This function averages all images of same bin together and and registers
+% the averaged images together to form a one-cycle movie
+%
+% Input arguments :
+%   regFolder : folder containing the registered bin OCT images
+%   regAveFolder : folder that will contain the averaged OCT images
+%   phasesI_corr : cell array containing the id of the frames and their
+%                  corresponding bins, after removal of outliers. For 
+%                  example, phasesI_corr{1} is a vector containing the ids
+%                  of all raw OCT scans corresponding to bin 1.
+%   fileNames : structure containing the filenames of the registered OCT 
+%               scans to average. This structure needs to be 
+%               organized as with the dir function of matlab, with a 
+%               .folder attribute and .name attribute mandatory
+%   nBinPhases : integer containing the number of bins used in the 
+%                separation of the cardiac cycle. 
+%   kernelSize : kernel size (in pixels) for smoothing the images to help 
+%                the translation registration operation. 
+function registerAverageBinTiltTranslation(regFolder, regAveFolder, ...
+                                           phasesI_corr, fileNames, ...
+                                           nBinPhases, kernelSize)
 
 % open file and discard contents
 fid = fopen(fullfile(regAveFolder, 'tilt_info.txt'), 'w');

@@ -1,7 +1,14 @@
 % This script creates a one-cycle video from a multiple OCT
-% Register images by bins of phase using the correlation tilt technique
-% Do tilt by phase, tilt on average images, then translation 
-% Emmanuelle Richer
+% 
+% The methodology of this repository was published in the article 
+% "Denoising OCT videos based on temporal redundancy", by authors
+% Emmanuelle Richer, Marissé Masis Solano, Farida Cheriet, Mark Lesk and
+% Santiago Costantino, in Scientific Reports. 
+% 
+% This script will register images by bins of phase using the correlation 
+% tilt technique by phase, then on averaged images. A final translation is
+% done on the registered averaged images. 
+% 
 % Input arguments : 
 %   list_ordered_bscans : structure containing the paths towards the OCT
 %                         frames in a ordered fashion (synchronized with 
@@ -9,11 +16,12 @@
 %                         structure needs to be organized as with the dir 
 %                         function of matlab, with a .folder attribute and 
 %                         .name attribute mandatory
-%   oct_timestamps
-%   pulse
-%   timeSec
-%   timeMilliSec
-% July 2023
+%   oct_timestamps : array containing the oct timestamps
+%   pulse : array containing the pulse amplitude information
+%   timeSec : array containing the timestamps of the pulse signal in
+%             seconds (must be same size as pulse variable)
+%   timeMilliSec : array containing the timestamps of the pulse signal in
+%                  milli seconds (must be same size as pulse variable)
 function registrationWRTPhase(list_ordered_bscans, ...
                               oct_timestamps, ...
                               pulse, timeSec, timeMilliSec, movieFolder)
@@ -38,7 +46,7 @@ mkdir(transFolder)
 mkdir(regFolder)
 warning on
 
-%% get phase corresponding to each timestamps
+%% Get phase corresponding to each timestamp
 
 [phasesI, tAve] = getPhase(oct_timestamps, nBinPhases, numCycles, pulse, ...
                            timeSec, timeMilliSec);
@@ -50,12 +58,12 @@ mis = computeTiltCorrelationRegistration(output_dir, transFolder, ...
                                          list_ordered_bscans, phasesI, ...
                                          nBinPhases, kernelSize);
 
-%% plot mis all on one graph
+%% Plot Matttes Mutual Information all on one graph to assess image quality
 
 [all_mis, all_phase_ids] = plotMis(mis, phasesI, nBinPhases, ...
                                    output_dir, 'all_MI');
 
-%% remove outliers
+%% Remove outliers
 
 phasesI_corr = removeOutliers_getPhaseIds(regFolder, all_mis, ...
                                           all_phase_ids, phasesI, ...
@@ -83,7 +91,7 @@ registerAverageBinTiltTranslation(regFolder, regAveFolder, phasesI_corr, ...
                                   list_ordered_bscans, nBinPhases, ...
                                   kernelSize)
 
-% Compute MI on average images
+% Compute Mattes Mutual Information on average images
 if ~isfile(fullfile(regAveFolder, 'MI_ave.fig'))
 
     fixed = imread(fullfile(regAveFolder, sprintf('aveBin%d.png', 1)));
@@ -107,7 +115,7 @@ if ~isfile(fullfile(regAveFolder, 'MI_ave.fig'))
 
 end
 
-%% create average video (mj2)
+%% Create average video (mj2)
 
 if ~isfile(fullfile(regAveFolder, 'averageMovie.mj2'))
     writer = VideoWriter(fullfile(regAveFolder, 'averageMovie'), 'Archival');
@@ -123,7 +131,7 @@ if ~isfile(fullfile(regAveFolder, 'averageMovie.mj2'))
     
 end
 
-%% do repeated video (mj2)
+%% Do repeated video (mj2) for visualization purposes
 
 nRep = 10;
 if ~isfile(fullfile(regAveFolder, sprintf('averageMovie_%d.mj2', nRep)))
